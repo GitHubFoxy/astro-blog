@@ -9,8 +9,9 @@ import markdoc from '@astrojs/markdoc';
 
 // https://astro.build/config
 export default defineConfig({
-    vite: {
-        plugins: [tailwindcss()]
-    },
-    integrations: [react(), markdoc()],
+  vite: {
+    plugins: [tailwindcss()]
+  },
+  integrations: [react(), markdoc()],
+  base: '/blog',
 });
