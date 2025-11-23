@@ -13,5 +13,4 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
   integrations: [react(), markdoc()],
-  base: '/blog',
 });
