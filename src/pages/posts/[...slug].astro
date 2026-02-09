@@ -1,0 +1,112 @@
+---
+import { getCollection } from "astro:content";
+import SocialLinks from "../../components/SocialLinks.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props as {
+  post: Awaited<ReturnType<typeof getCollection>>[number];
+};
+
+const { Content } = await post.render();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{post.data.title}</title>
+  </head>
+  <body>
+    <main>
+      <a class="back" href="/">Back to all posts</a>
+
+      <article>
+        <header>
+          <h1>{post.data.title}</h1>
+          <p class="meta">
+            {post.data.pubDate.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "2-digit",
+            })}
+          </p>
+          {post.data.description ? <p>{post.data.description}</p> : null}
+        </header>
+
+        <div class="content">
+          <Content />
+        </div>
+
+        <SocialLinks socials={post.data.socials} />
+      </article>
+    </main>
+
+    <style>
+      :global(body) {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: #111;
+        background: #fff;
+      }
+
+      main {
+        max-width: 54rem;
+        margin: 0 auto;
+        padding: 3rem 1.25rem;
+      }
+
+      .back {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        text-decoration: none;
+      }
+
+      .back:hover {
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+      }
+
+      h1 {
+        margin: 0 0 0.5rem;
+        font-size: 2.25rem;
+        letter-spacing: -0.02em;
+      }
+
+      .meta {
+        margin: 0 0 0.75rem;
+        color: rgba(0, 0, 0, 0.6);
+      }
+
+      article header p {
+        margin: 0.25rem 0 0;
+        color: rgba(0, 0, 0, 0.7);
+      }
+
+      .content :global(p) {
+        line-height: 1.7;
+      }
+
+      .content :global(a) {
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+      }
+
+      .content :global(pre) {
+        overflow: auto;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </body>
+</html>
+

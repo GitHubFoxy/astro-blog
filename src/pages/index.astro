@@ -1,17 +1,102 @@
 ---
+import { getCollection } from "astro:content";
 
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
 ---
 
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Minimal Blog</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Minimal Blog</h1>
+        <p>All posts:</p>
+      </header>
+
+      <ol>
+        {posts.map((post) => (
+          <li>
+            <a href={`/posts/${post.slug}/`}>{post.data.title}</a>
+            {post.data.description ? <p>{post.data.description}</p> : null}
+            <small>
+              {post.data.pubDate.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+              })}
+            </small>
+          </li>
+        ))}
+      </ol>
+    </main>
+
+    <style>
+      :global(body) {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: #111;
+        background: #fff;
+      }
+
+      main {
+        max-width: 54rem;
+        margin: 0 auto;
+        padding: 3rem 1.25rem;
+      }
+
+      header {
+        margin-bottom: 1.5rem;
+      }
+
+      h1 {
+        margin: 0 0 0.25rem;
+        font-size: 2rem;
+        letter-spacing: -0.02em;
+      }
+
+      p {
+        margin: 0.25rem 0 0;
+        color: rgba(0, 0, 0, 0.7);
+      }
+
+      ol {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 1rem;
+      }
+
+      li {
+        padding: 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 10px;
+      }
+
+      a {
+        font-weight: 650;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+      }
+
+      small {
+        display: inline-block;
+        margin-top: 0.5rem;
+        color: rgba(0, 0, 0, 0.6);
+      }
+    </style>
+  </body>
 </html>
+

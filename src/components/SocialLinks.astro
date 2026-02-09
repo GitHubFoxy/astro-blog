@@ -1,0 +1,62 @@
+---
+type Socials = {
+  website?: string;
+  github?: string;
+  twitter?: string;
+  linkedin?: string;
+};
+
+const { socials } = Astro.props as { socials?: Socials };
+
+const items = [
+  socials?.website ? { label: "Website", href: socials.website } : null,
+  socials?.github ? { label: "GitHub", href: socials.github } : null,
+  socials?.twitter ? { label: "Twitter", href: socials.twitter } : null,
+  socials?.linkedin ? { label: "LinkedIn", href: socials.linkedin } : null,
+].filter(Boolean) as Array<{ label: string; href: string }>;
+---
+
+{items.length ? (
+  <aside class="socials" aria-label="Social links">
+    <h2>Socials</h2>
+    <ul>
+      {items.map((item) => (
+        <li>
+          <a href={item.href} rel="me noopener noreferrer" target="_blank">
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </aside>
+) : null}
+
+<style>
+  .socials {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  h2 {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+  }
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+</style>
+
