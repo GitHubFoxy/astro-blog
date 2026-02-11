@@ -1,19 +1,26 @@
 ---
-type Socials = {
-  website?: string;
-  github?: string;
-  twitter?: string;
-  linkedin?: string;
+const { socials } = Astro.props as { socials?: Record<string, string> };
+
+const labels: Record<string, string> = {
+  website: "Website",
+  github: "GitHub",
+  twitter: "Twitter",
+  x: "X",
+  telegram: "Telegram",
+  linkedin: "LinkedIn",
 };
 
-const { socials } = Astro.props as { socials?: Socials };
+const preferredOrder = ["website", "github", "twitter", "x", "telegram", "linkedin"];
 
-const items = [
-  socials?.website ? { label: "Website", href: socials.website } : null,
-  socials?.github ? { label: "GitHub", href: socials.github } : null,
-  socials?.twitter ? { label: "Twitter", href: socials.twitter } : null,
-  socials?.linkedin ? { label: "LinkedIn", href: socials.linkedin } : null,
-].filter(Boolean) as Array<{ label: string; href: string }>;
+const orderedKeys = [
+  ...preferredOrder.filter((key) => socials?.[key]),
+  ...Object.keys(socials ?? {}).filter((key) => !preferredOrder.includes(key)),
+];
+
+const items = orderedKeys.map((key) => ({
+  label: labels[key] ?? key.charAt(0).toUpperCase() + key.slice(1),
+  href: socials![key],
+}));
 ---
 
 {items.length ? (
@@ -59,4 +66,3 @@ const items = [
     text-underline-offset: 0.2em;
   }
 </style>
-

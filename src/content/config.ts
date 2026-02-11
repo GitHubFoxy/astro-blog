@@ -6,16 +6,8 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string().optional(),
     pubDate: z.coerce.date(),
-    socials: z
-      .object({
-        website: z.string().url().optional(),
-        github: z.string().url().optional(),
-        twitter: z.string().url().optional(),
-        linkedin: z.string().url().optional(),
-      })
-      .optional(),
+    socials: z.record(z.string().url()).optional(),
   }),
 });
 
 export const collections = { blog };
-
